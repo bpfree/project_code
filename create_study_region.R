@@ -35,5 +35,3 @@ study_region_grid <- sf::st_make_grid(x = study_region,
 study_region_hex <- study_region_grid[study_region, ] %>%
   # add field "index" that will be populated with the row_number
   dplyr::mutate(index = row_number())
-
-#####################################
