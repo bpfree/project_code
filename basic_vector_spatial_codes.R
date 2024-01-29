@@ -38,6 +38,13 @@ data_clip <- data %>%
 
 #####################################
 
+# dissolve data
+data_clip <- data %>%
+  rmapshaper::ms_dissolve(input = data,
+                          field = "field")
+
+#####################################
+
 # spatial join
 data <- data[data_join, ] %>%
   sf::st_join(x = .,
