@@ -2,7 +2,7 @@
 
 ### Examples of this code
 #### https://github.com/bpfree/westport_mussels_aoa/blob/35e4dc1c9e8c32bea06a034c54593ab6c0804daa/code/15_ais.R#L93
-#### https://github.com/bpfree/westport_mussels_aoa/blob/35e4dc1c9e8c32bea06a034c54593ab6c0804daa/code/20_large_pelagic_survey.R#L96
+#### https://github.com/bpfree/westport_mussels_aoa/blob/35e4dc1c9e8c32bea06a034c54593ab6c0804daa/code/20_data.R#L96
 #### https://github.com/bpfree/westport_mussels_aoa/blob/35e4dc1c9e8c32bea06a034c54593ab6c0804daa/code/23_combined_protected_resources.R#L90
 
 ## raster datasets
@@ -86,30 +86,30 @@ zmf_function <- function(raster){
 #####################################
 
 ## vector datasets
-zmf_function <- function(large_pelagic_survey){
+zmf_function <- function(data){
   
   # calculate minimum value
-  min <- min(large_pelagic_survey$lps_value)
+  min <- min(data$value)
   
   # calculate maximum value
-  max <- max(large_pelagic_survey$lps_value)
+  max <- max(data$value)
   
   # calculate z-score minimum value
   ## this ensures that no value gets a value of 0
   z_max <- max + (max * 1 / 1000)
   
   # create a field and populate with the value determined by the z-shape membership scalar
-  large_pelagic_survey <- large_pelagic_survey %>%
+  data <- data %>%
     # calculate the z-shape membership value (more desired values get a score of 1 and less desired values will decrease till 0.01)
     ## ***Note: in other words, habitats with higher richness values will be closer to 0
-    dplyr::mutate(lps_z_value = ifelse(lps_value == min, 1, # if value is equal to minimum, score as 1
-                                       # if value is larger than minimum but lower than mid-value, calculate based on scalar equation
-                                       ifelse(lps_value > min & lps_value < (min + z_max) / 2, 1 - 2 * ((lps_value - min) / (z_max - min)) ** 2,
-                                              # if value is lower than z_maximum but larger than than mid-value, calculate based on scalar equation
-                                              ifelse(lps_value >= (min + z_max) / 2 & lps_value < z_max, 2 * ((lps_value - z_max) / (z_max - min)) ** 2,
-                                                     # if value is equal to maximum, value is equal to 0.01 [all other values should get an NA]
-                                                     ifelse(lps_value == z_max, 0.01, NA)))))
+    dplyr::mutate(z_value = ifelse(value == min, 1, # if value is equal to minimum, score as 1
+                                   # if value is larger than minimum but lower than mid-value, calculate based on scalar equation
+                                   ifelse(value > min & value < (min + z_max) / 2, 1 - 2 * ((value - min) / (z_max - min)) ** 2,
+                                          # if value is lower than z_maximum but larger than than mid-value, calculate based on scalar equation
+                                          ifelse(value >= (min + z_max) / 2 & value < z_max, 2 * ((value - z_max) / (z_max - min)) ** 2,
+                                                 # if value is equal to maximum, value is equal to 0.01 [all other values should get an NA]
+                                                 ifelse(value == z_max, 0.01, NA)))))
   
   # return the layer
-  return(large_pelagic_survey)
+  return(data)
 }
