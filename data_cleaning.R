@@ -34,8 +34,22 @@ data_summarise <- data %>%
 
 #####################################
 
-
-
 # create new field
 data <- data %>%
   dplyr::mutate(new_field = "name")
+
+#####################################
+
+# rename fields
+data <- data %>%
+  dplyr::rename("new_name_field1" = "old_name_field1",
+                "new_name_field2" = "old_name_field2",
+                "new_name_field3" = "old_name_field3")
+
+#####################################
+
+# distinct values
+data_distinct <- data %>%
+  dplyr::distinct()
+
+#####################################
