@@ -22,12 +22,6 @@ data <- data %>%
   dplyr::relocate(field_to_move,
                   .before = field_after_moved_field)
 
-### rename fields
-data <- data %>%
-  dplyr::rename("new_name_field1" = "old_name_field1",
-                "new_name_field2" = "old_name_field2",
-                "new_name_field3" = "old_name_field3")
-
 ## Check units for data
 sf::st_crs(data, parameters = TRUE)$units_gdal
 
